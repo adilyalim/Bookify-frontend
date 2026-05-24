@@ -18,12 +18,17 @@ export default defineComponent({
   name: 'BookList',
   data() {
     return {
-      books: [
-        { id: 1, title: 'Der kleine Prinz', author: 'Antoine de Saint-Exupéry', pages: 96 },
-        { id: 2, title: '1984', author: 'George Orwell', pages: 384 },
-        { id: 3, title: 'Sapiens', author: 'Yuval Noah Harari', pages: 443 },
-      ]
+      books: [] as any[]
     }
+  },
+  mounted() {
+    const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL
+    fetch(`${baseUrl}/books`)
+      .then(response => response.json())
+      .then(data => {
+        this.books = data
+      })
+      .catch(error => console.log(error))
   }
 })
 </script>
