@@ -11,8 +11,7 @@
 
     <ul>
       <li v-for="book in books" :key="book.id" class="book-item">
-        <strong>{{ book.title }}</strong>
-        <span> – {{ book.author }}</span>
+        <span class="book-info">{{ book.title }} – {{ book.author }}</span>
         <span class="pages">({{ book.pages }} Seiten)</span>
         <button @click="deleteBook(book.id)">🗑️</button>
       </li>
@@ -77,19 +76,49 @@ export default defineComponent({
 
 <style scoped>
 .book-list {
-  max-width: 500px;
-  margin: 40px auto;
-  font-family: Arial, sans-serif;
+  max-width: 700px;
+  margin: 60px auto;
+  padding: 0 20px;
+  font-family: 'Segoe UI',Arial, sans-serif;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 form {
   display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 10px;
+  margin-bottom: 30px;
+  padding: 16px;
+  background: #f9f9f9;
+  border-radius: 12px;
 }
 input {
   flex: 1;
-  padding: 8px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95em;
+}
+input:focus {
+  outline: none;
+  border-color: #42b983;
+}
+
+form button {
+  padding: 10px 20px;
+  background-color: #42b983;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+form button:hover {
+  background-color: #369870;
 }
 
 ul {
@@ -98,12 +127,19 @@ ul {
 }
 
 .book-item {
-  padding: 12px;
-  margin: 8px 0;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  justify-content: space-between;
+  padding: 16px 20px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 10px;
+  background: white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  display: flex;
   align-items: center;
+  gap: 16px;
+}
+
+.book-info {
+  flex: 1;
 }
 
 .book-item button {
@@ -120,8 +156,9 @@ ul {
 }
 
 .pages {
+  width: 100px;
+  text-align: right;
   color: gray;
-  margin-left: 8px;
   font-size: 0.9em;
 }
 </style>
