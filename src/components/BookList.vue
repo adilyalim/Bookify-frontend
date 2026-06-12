@@ -14,6 +14,7 @@
         <strong>{{ book.title }}</strong>
         <span> – {{ book.author }}</span>
         <span class="pages">({{ book.pages }} Seiten)</span>
+        <button @click="deleteBook(book.id)">🗑️</button>
       </li>
     </ul>
   </div>
@@ -58,6 +59,17 @@ export default defineComponent({
           this.newBook = { title: '', author: '', pages: 0 }
         })
         .catch(error => console.log(error))
+    },
+    deleteBook(id: number) {
+      const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL
+
+      fetch(`${baseUrl}/books/${id}`, {
+        method: 'DELETE'
+      })
+        .then(() => {
+          this.books = this.books.filter(book => book.id !== id)
+        })
+        .catch(error => console.log(error))
     }
   }
 })
@@ -90,6 +102,21 @@ ul {
   margin: 8px 0;
   border: 1px solid #ddd;
   border-radius: 8px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.book-item button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1em;
+  opacity: 0.5;
+  margin-left: 12px;
+}
+
+.book-item button:hover {
+  opacity: 1;
 }
 
 .pages {
