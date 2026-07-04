@@ -9,10 +9,19 @@
       <button type="submit">Hinzufügen</button>
     </form>
 
+    <div v-if="editingBook" class="edit-form">
+      <input v-model="editingBook.title" placeholder="Titel" />
+      <input v-model="editingBook.author" placeholder="Autor" />
+      <input v-model.number="editingBook.pages" type="number" placeholder="Seiten" />
+      <button @click="updateBook">Speichern</button>
+      <button @click="editingBook = null">Abbrechen</button>
+    </div>
+
     <ul>
       <li v-for="book in books" :key="book.id" class="book-item">
         <span class="book-info">{{ book.title }} – {{ book.author }}</span>
         <span class="pages">({{ book.pages }} Seiten)</span>
+        <button @click="startEdit(book)">✏️</button>
         <button @click="deleteBook(book.id)">🗑️</button>
       </li>
     </ul>
@@ -31,7 +40,8 @@ export default defineComponent({
         title: '',
         author: '',
         pages: 0
-      }
+      },
+      editingBook: null as any
     }
   },
   mounted() {
@@ -69,6 +79,25 @@ export default defineComponent({
           this.books = this.books.filter(book => book.id !== id)
         })
         .catch(error => console.log(error))
+    },
+    startEdit(book: any) {
+      this.editingBook = { ...book }
+    },
+    updateBook() {
+      const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL
+
+      fetch(`${baseUrl}/books/${this.editingBook.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(this.editingBook)
+      })
+        .then(response => response.json())
+        .then(updated => {
+          const index = this.books.findIndex(b => b.id === updated.id)
+          this.books[index] = updated
+          this.editingBook = null
+        })
+        .catch(error => console.log(error))
     }
   }
 })
@@ -87,7 +116,7 @@ h2 {
   margin-bottom: 30px;
 }
 
-form {
+form, .edit-form {
   display: flex;
   gap: 10px;
   margin-bottom: 30px;
