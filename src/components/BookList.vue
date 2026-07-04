@@ -17,8 +17,10 @@
       <button @click="editingBook = null">Abbrechen</button>
     </div>
 
+    <input v-model="searchQuery" placeholder="🔍 Suchen..." class="search-input" />
+
     <ul>
-      <li v-for="book in books" :key="book.id" class="book-item">
+      <li v-for="book in filteredBooks" :key="book.id" class="book-item">
         <span class="book-info">{{ book.title }} – {{ book.author }}</span>
         <span class="pages">({{ book.pages }} Seiten)</span>
         <button @click="startEdit(book)">✏️</button>
@@ -41,7 +43,15 @@ export default defineComponent({
         author: '',
         pages: 0
       },
-      editingBook: null as any
+      editingBook: null as any,
+      searchQuery: ''
+    }
+  },
+  computed: {
+    filteredBooks() {
+      return this.books.filter(book =>
+        book.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+      )
     }
   },
   mounted() {
@@ -148,6 +158,12 @@ form button {
 
 form button:hover {
   background-color: #369870;
+}
+
+.search-input {
+  width: 100%;
+  margin-bottom: 20px;
+  box-sizing: border-box;
 }
 
 ul {
